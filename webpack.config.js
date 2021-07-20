@@ -8,8 +8,9 @@ require("dotenv").config();
 let localCanister;
 
 try {
-  localCanister = require("./.dfx/local/canister_ids.json").idp_service.local;
+  localCanister = require("./.dfx/local/canister_ids.json").whoami.local;
 } catch {}
+
 
 // List of all aliases for canisters. This creates the module alias for
 // the `import ... from "@dfinity/ic/canisters/xyz"` where xyz is the name of a
@@ -74,7 +75,7 @@ function generateWebpackConfigForCanister(name, info) {
       path: path.join(__dirname, "dist"),
     },
     devServer: {
-      port: 8080,
+      port: 8081,
       proxy: {
         "/api": "http://localhost:8000",
       },
@@ -103,7 +104,9 @@ function generateWebpackConfigForCanister(name, info) {
         process: require.resolve("process/browser"),
         path: require.resolve("path"),
       }),
-      new webpack.EnvironmentPlugin(["CANISTER_ID"]),
+      new webpack.EnvironmentPlugin({
+        CANISTER_ID: localCanister,
+      }),
       new CopyPlugin({
         patterns: [
           {

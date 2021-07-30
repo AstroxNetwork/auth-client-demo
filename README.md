@@ -2,18 +2,10 @@
 
 This is an example project, intended to demonstrate how an app developer might integrate with an [Internet Identity](https://identity.ic0.app).
 
-[Live demo](https://vasb2-4yaaa-aaaab-qadoa-cai.ic0.app/)
+Also, this is a demo used for interacting with `agent_dart`, because Internet Identity currently only supports passing message via browser window. Hence we can not use normal native authorization flow eg: `callback_uri` directly.
 
-This is an example showing how to use [@dfinity/auth-client](https://www.npmjs.com/package/@dfinity/auth-client).
-
-To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
-
-To learn more before you start working with auth_demo, see the following documentation available online:
-
-- [Quick Start](https://sdk.dfinity.org/docs/quickstart/quickstart-intro.html)
-- [SDK Developer Tools](https://sdk.dfinity.org/docs/developers-guide/sdk-guide.html)
-- [Motoko Programming Language Guide](https://sdk.dfinity.org/docs/language-guide/motoko.html)
-- [Motoko Language Quick Reference](https://sdk.dfinity.org/docs/language-guide/language-manual.html)
+We have to generate a plain new webpage, and **IMPORTANT** to deploy it to the IC, the url should be the same origin to your main frontend canister, to give you correct delegation identity from II.
+Use the example to deploy to your local environment.
 
 ## Setting up for local development
 
@@ -37,3 +29,8 @@ Copy the canister ID fom the Internet Identity canister, and paste it into `webp
 Finally, cd back into the auth-client-demo directory and start the development server with `npm start`.
 
 You can now access the app at `http://localhost:8080`.
+
+
+## Setting up for flutter `auth-client` flow
+
+TODO

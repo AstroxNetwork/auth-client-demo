@@ -5,8 +5,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 // Replace this value with the ID of your local Internet Identity canister
-// const LOCAL_II_CANISTER = 'http://rwlgt-iiaaa-aaaaa-aaaaa-cai.localhost:8000/#authorize';
-const LOCAL_II_CANISTER = 'https://identity.ic0.app/#authorize';
+const LOCAL_II_CANISTER = 'http://rwlgt-iiaaa-aaaaa-aaaaa-cai.localhost:8000/#authorize';
+// const LOCAL_II_CANISTER = 'https://identity.ic0.app/#authorize';
 
 let localCanisters, prodCanisters, canisters;
 
@@ -27,9 +27,83 @@ function initCanisterIds() {
 
 	canisters = network === 'local' ? localCanisters : prodCanisters;
 
+<<<<<<< HEAD
 	for (const canister in canisters) {
 		process.env[canister.toUpperCase() + '_CANISTER_ID'] = canisters[canister][network];
 	}
+=======
+  return {
+    mode: isProduction ? "production" : "development",
+    entry: {
+      // The frontend.entrypoint points to the HTML file for this build, so we need
+      // to replace the extension to `.js`.
+      index: path
+        .join(__dirname, info.frontend.entrypoint)
+        .replace(/\.html$/, ".ts"),
+    },
+    devtool,
+    optimization: {
+      minimize: isProduction,
+    },
+    resolve: {
+      alias: aliases,
+      extensions: [".js", ".ts", ".jsx", ".tsx"],
+      fallback: {
+        assert: require.resolve("assert/"),
+        buffer: require.resolve("buffer/"),
+        events: require.resolve("events/"),
+        stream: require.resolve("stream-browserify/"),
+        util: require.resolve("util/"),
+      },
+    },
+    output: {
+      filename: "[name].js",
+      path: path.join(__dirname, "dist"),
+    },
+    devServer: {
+      port: 8081,
+      proxy: {
+        "/api": "http://localhost:8000",
+      },
+      allowedHosts: [".localhost", ".local", ".ngrok.io"],
+    },
+
+    // Depending in the language or framework you are using for
+    // front-end development, add module loaders to the default
+    // webpack configuration. For example, if you are using React
+    // modules and CSS as described in the "Adding a stylesheet"
+    // tutorial, uncomment the following lines:
+    module: {
+      rules: [
+        { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
+        { test: /\.css$/, use: ["style-loader", "css-loader"] },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, info.frontend.entrypoint),
+        filename: "index.html",
+        chunks: ["index"],
+      }),
+      new webpack.ProvidePlugin({
+        Buffer: [require.resolve("buffer/"), "Buffer"],
+        process: require.resolve("process/browser"),
+        path: require.resolve("path"),
+      }),
+      new webpack.EnvironmentPlugin({
+        CANISTER_ID: localCanister,
+      }),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: path.join(__dirname, "src", "frontend", "assets"),
+            to: path.join(__dirname, "dist"),
+          },
+        ],
+      }),
+    ],
+  };
+>>>>>>> c57958417e3d5ad1a3b7ac74d57dbcc11853a4a5
 }
 initCanisterIds();
 

@@ -1,5 +1,5 @@
 import { ActorSubclass } from "@dfinity/agent";
-import { AuthClient } from "@dfinity/auth-client";
+import { AuthClient } from "../auth-client";
 import { html, render } from "lit-html";
 import { renderIndex } from ".";
 import { _SERVICE } from "../did";

@@ -9,9 +9,10 @@ import {
   Ed25519KeyIdentity,
 } from '@dfinity/identity';
 
-const KEY_LOCALSTORAGE_KEY = 'identity';
-const KEY_LOCALSTORAGE_DELEGATION = 'delegation';
-const IDENTITY_PROVIDER_DEFAULT = 'https://identity.ic0.app';
+const KEY_SESSIONSTORAGE_KEY = 'identity';
+const KEY_SESSIONSTORAGE_DELEGATION = 'delegation';
+// const IDENTITY_PROVIDER_DEFAULT = 'https://identity.ic0.app';
+const IDENTITY_PROVIDER_DEFAULT = 'http://localhost:8080';
 const IDENTITY_PROVIDER_ENDPOINT = '#authorize';
 
 /**
@@ -23,7 +24,7 @@ export interface AuthClientCreateOptions {
    */
   identity?: SignIdentity;
   /**
-   * Optional storage with get, set, and remove. Uses LocalStorage by default
+   * Optional storage with get, set, and remove. Uses SessionStorage by default
    */
   storage?: AuthClientStorage;
 }
@@ -78,30 +79,30 @@ interface InternetIdentityAuthResponseSuccess {
 }
 
 async function _deleteStorage(storage: AuthClientStorage) {
-  await storage.remove(KEY_LOCALSTORAGE_KEY);
-  await storage.remove(KEY_LOCALSTORAGE_DELEGATION);
+  await storage.remove(KEY_SESSIONSTORAGE_KEY);
+  await storage.remove(KEY_SESSIONSTORAGE_DELEGATION);
 }
 
-export class LocalStorage implements AuthClientStorage {
-  constructor(public readonly prefix = 'ic-', private readonly _localStorage?: Storage) {}
+export class SessionStorage implements AuthClientStorage {
+  constructor(public readonly prefix = 'ic-', private readonly _sessionStorage?: Storage) {}
 
   public get(key: string): Promise<string | null> {
-    return Promise.resolve(this._getLocalStorage().getItem(this.prefix + key));
+    return Promise.resolve(this._getSessionStorage().getItem(this.prefix + key));
   }
 
   public set(key: string, value: string): Promise<void> {
-    this._getLocalStorage().setItem(this.prefix + key, value);
+    this._getSessionStorage().setItem(this.prefix + key, value);
     return Promise.resolve();
   }
 
   public remove(key: string): Promise<void> {
-    this._getLocalStorage().removeItem(this.prefix + key);
+    this._getSessionStorage().removeItem(this.prefix + key);
     return Promise.resolve();
   }
 
-  private _getLocalStorage() {
-    if (this._localStorage) {
-      return this._localStorage;
+  private _getSessionStorage() {
+    if (this._sessionStorage) {
+      return this._sessionStorage;
     }
 
     const ls =
@@ -109,9 +110,9 @@ export class LocalStorage implements AuthClientStorage {
         ? typeof global === 'undefined'
           ? typeof self === 'undefined'
             ? undefined
-            : self.localStorage
-          : global.localStorage
-        : window.localStorage;
+            : self.sessionStorage
+          : global.sessionStorage
+        : window.sessionStorage;
 
     if (!ls) {
       throw new Error('Could not find local storage.');
@@ -146,20 +147,21 @@ interface AuthResponseFailure {
 type IdentityServiceResponseMessage = AuthReadyMessage | AuthResponse;
 type AuthResponse = AuthResponseSuccess | AuthResponseFailure;
 
-export class AuthClient {
+
+export class AuthClient{
   public static async create(options: AuthClientCreateOptions = {}): Promise<AuthClient> {
-    const storage = options.storage ?? new LocalStorage('ic-');
+    const storage = options.storage ?? new SessionStorage('ic-');
 
     let key: null | SignIdentity = null;
     if (options.identity) {
       key = options.identity;
     } else {
-      const maybeIdentityStorage = await storage.get(KEY_LOCALSTORAGE_KEY);
+      const maybeIdentityStorage = await storage.get(KEY_SESSIONSTORAGE_KEY);
       if (maybeIdentityStorage) {
         try {
           key = Ed25519KeyIdentity.fromJSON(maybeIdentityStorage);
         } catch (e) {
-          // Ignore this, this means that the localStorage value isn't a valid Ed25519KeyIdentity
+          // Ignore this, this means that the sessionStorage value isn't a valid Ed25519KeyIdentity
           // serialization.
         }
       }
@@ -170,7 +172,7 @@ export class AuthClient {
 
     if (key) {
       try {
-        const chainStorage = await storage.get(KEY_LOCALSTORAGE_DELEGATION);
+        const chainStorage = await storage.get(KEY_SESSIONSTORAGE_DELEGATION);
 
         if (chainStorage) {
           chain = DelegationChain.fromJSON(chainStorage);
@@ -249,7 +251,7 @@ export class AuthClient {
       // Create a new key (whether or not one was in storage).
       key = Ed25519KeyIdentity.generate();
       this._key = key;
-      await this._storage.set(KEY_LOCALSTORAGE_KEY, JSON.stringify(key));
+      await this._storage.set(KEY_SESSIONSTORAGE_KEY, JSON.stringify(key));
     }
 
     // Create the URL of the IDP. (e.g. https://XXXX/#authorize)
@@ -269,7 +271,9 @@ export class AuthClient {
     window.addEventListener('message', this._eventHandler);
 
     // Open a new window with the IDP provider.
-    this._idpWindow = window.open(identityProviderUrl.toString(), 'idpWindow') ?? undefined;
+    this._idpWindow = window.open(identityProviderUrl.toString(), 'idpWindow', 
+      'height=500, width=640, top=0, right=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no'
+    ) ?? undefined;
   }
 
   private _getEventHandler(identityProviderUrl: URL, options?: AuthClientLoginOptions) {
@@ -301,7 +305,7 @@ export class AuthClient {
             // messes up the jest tests for some reason.
             if (this._chain) {
               await this._storage.set(
-                KEY_LOCALSTORAGE_DELEGATION,
+                KEY_SESSIONSTORAGE_DELEGATION,
                 JSON.stringify(this._chain.toJSON()),
               );
             }

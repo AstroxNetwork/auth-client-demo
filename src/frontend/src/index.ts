@@ -1,5 +1,5 @@
 import { Actor, HttpAgent } from "@dfinity/agent";
-import { AuthClient } from "@dfinity/auth-client";
+import { AuthClient } from "./auth-client";
 import idlFactory from "./did";
 import type { _SERVICE } from "./did";
 import { renderIndex } from "./views";

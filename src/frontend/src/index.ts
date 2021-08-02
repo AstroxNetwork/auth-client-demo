@@ -6,7 +6,7 @@ import { renderIndex } from "./views";
 import { renderLoggedIn } from "./views/loggedIn";
 
 const init = async () => {
-  const authClient = await AuthClient.create();
+  const authClient = await AuthClient.create({ appId: 'appIdxx0012888501'});
   if (await authClient.isAuthenticated()) {
     handleAuthenticated(authClient);
   }

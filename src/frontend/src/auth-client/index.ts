@@ -27,6 +27,8 @@ export interface AuthClientCreateOptions {
    * Optional storage with get, set, and remove. Uses SessionStorage by default
    */
   storage?: AuthClientStorage;
+  // appId
+  appId: string;
 }
 
 export interface AuthClientLoginOptions {
@@ -63,6 +65,7 @@ interface InternetIdentityAuthRequest {
   kind: 'authorize-client';
   sessionPublicKey: Uint8Array;
   maxTimeToLive?: bigint;
+  appId: string;
 }
 
 interface InternetIdentityAuthResponseSuccess {
@@ -149,7 +152,7 @@ type AuthResponse = AuthResponseSuccess | AuthResponseFailure;
 
 
 export class AuthClient{
-  public static async create(options: AuthClientCreateOptions = {}): Promise<AuthClient> {
+  public static async create(options: AuthClientCreateOptions = {appId: ''}): Promise<AuthClient> {
     const storage = options.storage ?? new SessionStorage('ic-');
 
     let key: null | SignIdentity = null;
@@ -193,7 +196,7 @@ export class AuthClient{
       }
     }
 
-    return new this(identity, key, chain, storage);
+    return new this(identity, key, chain, storage, options.appId);
   }
 
   protected constructor(
@@ -201,6 +204,7 @@ export class AuthClient{
     private _key: SignIdentity | null,
     private _chain: DelegationChain | null,
     private _storage: AuthClientStorage,
+    private _appId: string,
     // A handle on the IdP window.
     private _idpWindow?: Window,
     // The event handler for processing events from the IdP.
@@ -291,6 +295,7 @@ export class AuthClient{
             kind: 'authorize-client',
             sessionPublicKey: this._key?.getPublicKey().toDer() as Uint8Array,
             maxTimeToLive: options?.maxTimeToLive,
+            appId: this._appId,
           };
           this._idpWindow?.postMessage(request, identityProviderUrl.origin);
           break;

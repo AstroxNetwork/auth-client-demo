@@ -5,8 +5,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 // Replace this value with the ID of your local Internet Identity canister
-const LOCAL_II_CANISTER = 'http://rwlgt-iiaaa-aaaaa-aaaaa-cai.localhost:8000/#authorize';
-// const LOCAL_II_CANISTER = 'https://identity.ic0.app/#authorize';
+// const LOCAL_II_CANISTER = 'http://rwlgt-iiaaa-aaaaa-aaaaa-cai.localhost:8000/#authorize';
+const LOCAL_II_CANISTER = 'https://identity.ic0.app/#authorize';
 
 let localCanisters, prodCanisters, canisters;
 

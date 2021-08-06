@@ -140,6 +140,10 @@ button.primary {
   border: none;
 }
 
+button.hide {
+  display: none;
+}
+
 button.linkStyle {
   cursor: pointer;
   display: inline;

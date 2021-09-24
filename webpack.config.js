@@ -57,6 +57,7 @@ module.exports = {
 			events: require.resolve('events/'),
 			stream: require.resolve('stream-browserify/'),
 			util: require.resolve('util/'),
+			// '@dfinity/agent': require.resolve('@astrox/agent/'),
 		},
 	},
 	output: {

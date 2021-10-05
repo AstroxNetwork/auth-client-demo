@@ -1,28 +1,28 @@
 {
-  "canisters": {
-    "whoami": {
-      "main": "src/whoami/main.mo",
-      "type": "motoko"
-    },
-    "www": {
-      "dependencies": ["whoami"],
-      "frontend": {
-        "entrypoint": "src/frontend/src/index.html"
-      },
-      "source": ["src/frontend/assets", "dist/"],
-      "type": "assets"
-    }
-  },
-  "defaults": {
-    "build": {
-      "packtool": ""
-    }
-  },
-  "networks": {
-    "local": {
-      "bind": "127.0.0.1:8001",
-      "type": "ephemeral"
-    }
-  },
-  "version": 1
+	"canisters": {
+		"whoami": {
+			"main": "src/whoami/main.mo",
+			"type": "motoko"
+		},
+		"www": {
+			"dependencies": ["whoami"],
+			"frontend": {
+				"entrypoint": "src/frontend/src/index.html"
+			},
+			"source": ["src/frontend/assets", "dist/"],
+			"type": "assets"
+		}
+	},
+	"defaults": {
+		"build": {
+			"packtool": ""
+		}
+	},
+	"networks": {
+		"local": {
+			"bind": "127.0.0.1:8000",
+			"type": "ephemeral"
+		}
+	},
+	"version": 1
 }

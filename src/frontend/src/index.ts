@@ -26,6 +26,10 @@ const init = async () => {
 			onSuccess: async () => {
 				handleAuthenticated(authClient);
 			},
+			identityProvider:
+				process.env.DFX_NETWORK === 'ic'
+					? 'https://64l4r-aaaaa-aaaah-aaklq-cai.raw.ic0.app/#authorize'
+					: process.env.LOCAL_ME_CANISTER,
 			maxTimeToLive: days * hours * nanoseconds,
 		});
 	};
@@ -51,10 +55,11 @@ async function handleAuthenticated(authClient: AuthClient | iiAuth.AuthClient) {
 
 	const agent = new HttpAgent({ identity });
 	console.log(process.env.CANISTER_ID);
+	console.log(process.env.isProduction);
 
-	if (!process.env.isProduction) {
-		await agent.fetchRootKey();
-	}
+	// if (!process.env.isProduction) {
+	await agent.fetchRootKey();
+	// }
 
 	const whoami_actor = Actor.createActor<_SERVICE>(idlFactory, {
 		agent,

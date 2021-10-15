@@ -6,7 +6,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 const dfxJson = require('./dfx.json');
 require('dotenv').config();
 let localCanister;
-const LOCAL_II_CANISTER = 'http://localhost:8000/?canisterId=7pdsn-cqaaa-aaaaa-aabcq-cai#authorize';
+const LOCAL_II_CANISTER = 'http://rno2w-sqaaa-aaaaa-aaacq-cai.localhost:8000/#authorize';
+const LOCAL_ME_CANISTER = 'http://localhost:8080/anthen/login#authorize'; //'http://localhost:8000/?canisterId=7bb7f-zaaaa-aaaaa-aabdq-cai#authorize';
 
 try {
 	localCanister = require('./.dfx/local/canister_ids.json').whoami.local;
@@ -96,6 +97,7 @@ function generateWebpackConfigForCanister(name, info) {
 			new webpack.EnvironmentPlugin({
 				CANISTER_ID: localCanister,
 				LOCAL_II_CANISTER,
+				LOCAL_ME_CANISTER,
 				isProduction,
 			}),
 			new CopyPlugin({

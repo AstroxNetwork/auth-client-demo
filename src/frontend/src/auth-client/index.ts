@@ -1,5 +1,6 @@
 import {
   Actor,
+  ActorSubclass,
   AnonymousIdentity,
   DerEncodedPublicKey,
   HttpAgent,
@@ -18,6 +19,7 @@ import {
 } from "@dfinity/identity";
 import { E8s } from "../utils/common/types";
 import { LedgerConnection } from "./ledgerConnection";
+import { InterfaceFactory } from "@dfinity/candid/lib/cjs/idl";
 
 const KEY_SESSIONSTORAGE_KEY = "identity";
 const KEY_SESSIONSTORAGE_DELEGATION = "delegation";
@@ -55,11 +57,16 @@ export interface AuthClientLoginOptions {
   /**
    * Callback once login has completed
    */
-  onSuccess?: () => void;
+  onSuccess?: () => void | Promise<void>;
   /**
    * Callback in case authentication fails
    */
   onError?: (error?: string) => void;
+
+  /**
+   * Callback once is authenticated
+   */
+  onAuthenticated?: (ic: IC) => void | Promise<void>;
 }
 
 /**
@@ -116,6 +123,8 @@ interface IIAuthResponseSuccess extends DelegationResult {
 }
 
 type AuthResponseSuccess = MeAuthResponseSuccess | IIAuthResponseSuccess;
+
+type EventHandler = (event: MessageEvent) => Promise<void>;
 
 async function _deleteStorage(storage: AuthClientStorage) {
   await storage.remove(KEY_SESSIONSTORAGE_KEY);
@@ -205,6 +214,7 @@ export class AuthClient {
       key = options.identity;
     } else {
       const maybeIdentityStorage = await storage.get(KEY_SESSIONSTORAGE_KEY);
+
       if (maybeIdentityStorage) {
         try {
           key = Ed25519KeyIdentity.fromJSON(maybeIdentityStorage);
@@ -271,7 +281,10 @@ export class AuthClient {
     private _eventHandler?: (event: MessageEvent) => void
   ) {}
 
-  private _handleSuccess(message: AuthResponseSuccess, onSuccess?: () => void) {
+  private async _handleSuccess(
+    message: AuthResponseSuccess,
+    onSuccess?: () => void | Promise<void>
+  ): Promise<void> {
     if (message["identity"] !== undefined) {
       const idDelegations = (
         message["identity"] as DelegationResult
@@ -327,7 +340,7 @@ export class AuthClient {
     console.log(this._identity);
 
     this._idpWindow?.close();
-    onSuccess?.();
+    await onSuccess?.();
     this._removeEventListener();
   }
 
@@ -378,11 +391,6 @@ export class AuthClient {
     this._idpWindow?.close();
     this._removeEventListener();
 
-    // Add an event listener to handle responses.
-    this._eventHandler = this._getEventHandler(identityProviderUrl, options);
-    window.addEventListener("message", this._eventHandler);
-
-    console.log(this._idpWindowOption);
     // Open a new window with the IDP provider.
     this._idpWindow =
       window.open(
@@ -390,12 +398,16 @@ export class AuthClient {
         "idpWindow",
         this._idpWindowOption
       ) ?? undefined;
+    // Add an event listener to handle responses.
+
+    this._eventHandler = this._getEventHandler(identityProviderUrl, options);
+    window.addEventListener("message", this._eventHandler);
   }
 
   private _getEventHandler(
     identityProviderUrl: URL,
     options?: AuthClientLoginOptions
-  ) {
+  ): EventHandler {
     return async (event: MessageEvent) => {
       if (event.origin !== identityProviderUrl.origin) {
         return;
@@ -420,7 +432,7 @@ export class AuthClient {
         case "authorize-client-success":
           // Create the delegation chain and store it.
           try {
-            this._handleSuccess(message, options?.onSuccess);
+            await this._handleSuccess(message, options?.onSuccess);
 
             // Setting the storage is moved out of _handleSuccess to make
             // it a sync function. Having _handleSuccess as an async function
@@ -500,7 +512,7 @@ export class IC {
   ): Promise<IC> {
     const authClient = await AuthClient.create(connectOptions);
 
-    const ic = new this(authClient);
+    const newIC = new this(authClient);
 
     const provider =
       loginOptions?.identityProvider ?? process.env.isProduction
@@ -508,24 +520,37 @@ export class IC {
         : process.env.LOCAL_ME_CANISTER;
 
     console.log({ provider });
+    if (await newIC.isAuthenticated()) {
+      await newIC.handleAuthenticated(newIC);
+      await loginOptions?.onAuthenticated?.(newIC);
+      return newIC;
+    }
 
-    await ic.getAuthClient().login({
-      onSuccess: async () => {
-        ic.handleAuthenticated(ic);
-      },
+    await newIC.getAuthClient().login({
       identityProvider: provider,
       // Maximum authorization expiration is 8 days
       maxTimeToLive: loginOptions?.maxTimeToLive ?? days * hours * nanoseconds,
-      onError: ic.handleError,
+      onSuccess: async () => {
+        await newIC.handleAuthenticated(newIC);
+        (await loginOptions?.onSuccess?.()) ??
+          (await loginOptions?.onAuthenticated?.(newIC));
+      },
+      onError: newIC.handleError,
     });
-
-    return ic;
+    console.log({ newIC });
+    return newIC;
   }
   #authClient: AuthClient;
   #agent?: HttpAgent;
   #ledger?: LedgerConnection;
+
   protected constructor(authClient: AuthClient) {
     this.#authClient = authClient;
+  }
+
+  public async isAuthenticated(): Promise<boolean> {
+    const result = await this.#authClient.isAuthenticated();
+    return result;
   }
 
   public get identity(): Identity {
@@ -542,6 +567,10 @@ export class IC {
 
   protected getAuthClient(): AuthClient {
     return this.#authClient;
+  }
+
+  public async disconnect(options: { returnTo?: string } = {}): Promise<void> {
+    await this.getAuthClient().logout(options);
   }
 
   public async queryBalance(): Promise<bigint> {
@@ -581,5 +610,15 @@ export class IC {
 
   public handleError(error?: string): void {
     throw new Error(error);
+  }
+
+  public createActor<T>(
+    idlFactory: InterfaceFactory,
+    canisterId: string
+  ): ActorSubclass<T> {
+    return Actor.createActor<T>(idlFactory, {
+      agent: this.#agent,
+      canisterId,
+    });
   }
 }

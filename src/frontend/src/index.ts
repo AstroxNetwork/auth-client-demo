@@ -6,8 +6,12 @@ import type { _SERVICE } from "./did";
 import { renderIndex } from "./views";
 import { renderLoggedIn } from "./views/loggedIn";
 
-const init = async () => {
-  renderIndex();
+export const init = async () => {
+  await renderIndex();
+  await initBody();
+};
+
+export const initBody = async () => {
   const days = BigInt(1);
   const hours = BigInt(24);
   const nanoseconds = BigInt(3600000000000);
@@ -15,22 +19,28 @@ const init = async () => {
     "loginButton"
   ) as HTMLButtonElement;
   loginButton.onclick = async () => {
-    const authClient = await IC.connect({
-      appId: process.env.CANISTER_ID!,
-    });
-    // await authClient.login({
-    //   onSuccess: async () => {
-    //     handleAuthenticated(authClient);
-    //   },
-    //   identityProvider: process.env.isProduction
-    //     ? "https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/#authorize"
-    //     : process.env.LOCAL_ME_CANISTER,
-    //   maxTimeToLive: days * hours * nanoseconds,
-    // });
+    await IC.connect(
+      {
+        appId: process.env.CANISTER_ID!,
+      },
+      {
+        onAuthenticated: async (thisIc) => {
+          const whoami_actor = thisIc.createActor<_SERVICE>(
+            idlFactory,
+            process.env.CANISTER_ID as string
+          );
+          renderLoggedIn(whoami_actor, thisIc);
+        },
+      }
+    );
+
+    // console.log(await authClient.isAuthenticated());
     // if (await authClient.isAuthenticated()) {
-    //   handleAuthenticated(authClient);
-    // } else {
-    //   return;
+    //   const whoami_actor = authClient.createActor<_SERVICE>(
+    //     idlFactory,
+    //     process.env.CANISTER_ID as string
+    //   );
+    //   renderLoggedIn(whoami_actor, authClient);
     // }
   };
 
@@ -58,7 +68,7 @@ const init = async () => {
   };
 };
 
-async function handleAuthenticated(authClient: AuthClient | iiAuth.AuthClient) {
+async function handleAuthenticated(authClient: iiAuth.AuthClient) {
   const identity = await authClient.getIdentity();
 
   const agent = new HttpAgent({ identity });

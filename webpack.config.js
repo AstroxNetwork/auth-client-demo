@@ -6,11 +6,12 @@ const TerserPlugin = require('terser-webpack-plugin');
 const dfxJson = require('./dfx.json');
 require('dotenv').config();
 let localCanister;
-const LOCAL_II_CANISTER = 'http://rno2w-sqaaa-aaaaa-aaacq-cai.localhost:8000/#authorize';
+const LOCAL_II_CANISTER = 'http://localhost:8000/?canisterId=rwlgt-iiaaa-aaaaa-aaaaa-cai#authorize';
 const LOCAL_ME_CANISTER = 'http://localhost:8080/anthen/login#authorize'; //'http://localhost:8000/?canisterId=7bb7f-zaaaa-aaaaa-aabdq-cai#authorize';
 
 try {
 	localCanister = require('./.dfx/local/canister_ids.json').whoami.local;
+	
 } catch {}
 
 // List of all aliases for canisters. This creates the module alias for
@@ -95,9 +96,12 @@ function generateWebpackConfigForCanister(name, info) {
 				path: require.resolve('path'),
 			}),
 			new webpack.EnvironmentPlugin({
-				CANISTER_ID: localCanister,
+				CANISTER_ID: isProduction?require('./canister_ids.json').whoami.ic:localCanister,
 				LOCAL_II_CANISTER,
 				LOCAL_ME_CANISTER,
+				LEDGER_CANISTER_ID: isProduction
+          ? require('./ledger_config.json').PRODUCTION_CANISTERID
+          : require('./ledger_config.json').LOCAL_CANISTERID,
 				isProduction,
 			}),
 			new CopyPlugin({

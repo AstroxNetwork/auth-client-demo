@@ -4,8 +4,9 @@
 	"description": "",
 	"keywords": [],
 	"scripts": {
-		"build": "NODE_ENV=development webpack",
-		"start": "webpack serve",
+		"build:local": "NODE_ENV=developement webpack",
+		"build": "NODE_ENV=production DFX_NETWORK=ic webpack",
+		"start": "NODE_ENV=development webpack serve",
 		"develop": "npm start"
 	},
 	"devDependencies": {
@@ -29,10 +30,11 @@
 	},
 	"dependencies": {
 		"@dfinity/auth-client": "^0.10.1",
-		"@dfinity/principal": "^0.10.1",
 		"@dfinity/authentication": "^0.10.1",
-		"@dfinity/identity": "^0.10.1",
 		"@dfinity/candid": "^0.10.1",
+		"@dfinity/identity": "^0.10.1",
+		"@dfinity/principal": "^0.10.1",
+		"crc": "^3.8.0",
 		"lit-html": "^1.4.1",
 		"module-alias": "^2.2.2",
 		"typescript": "^4.3.5"

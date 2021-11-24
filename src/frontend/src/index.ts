@@ -24,6 +24,7 @@ export const initBody = async () => {
         appId: process.env.CANISTER_ID!,
       },
       {
+				permissions: ['identity', 'wallet'],
         onAuthenticated: async (thisIc) => {
           const whoami_actor = thisIc.createActor<_SERVICE>(
             idlFactory,

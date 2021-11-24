@@ -43,6 +43,7 @@ export interface AuthClientCreateOptions {
   // appId
   appId?: string;
   idpWindowOption?: string;
+
 }
 
 export interface AuthClientLoginOptions {
@@ -67,6 +68,10 @@ export interface AuthClientLoginOptions {
    * Callback once is authenticated
    */
   onAuthenticated?: (ic: IC) => void | Promise<void>;
+  /**
+   * apply permissions
+   */
+   permissions?: string[]
 }
 
 /**
@@ -85,6 +90,7 @@ interface InternetIdentityAuthRequest {
   sessionPublicKey: Uint8Array;
   maxTimeToLive?: bigint;
   appId?: string;
+  permissions: string[];
 }
 
 // interface InternetIdentityAuthResponseSuccess {
@@ -371,6 +377,7 @@ export class AuthClient {
   }
 
   public async login(options?: AuthClientLoginOptions): Promise<void> {
+
     let key = this._key;
     if (!key) {
       // Create a new key (whether or not one was in storage).
@@ -425,6 +432,7 @@ export class AuthClient {
             ),
             maxTimeToLive: options?.maxTimeToLive,
             appId: this._appId,
+            permissions: options?.permissions ?? ['identity'],
           };
           this._idpWindow?.postMessage(request, identityProviderUrl.origin);
           break;
@@ -527,6 +535,7 @@ export class IC {
     }
 
     await newIC.getAuthClient().login({
+      ...loginOptions,
       identityProvider: provider,
       // Maximum authorization expiration is 8 days
       maxTimeToLive: loginOptions?.maxTimeToLive ?? days * hours * nanoseconds,

@@ -46,6 +46,11 @@ export interface AuthClientCreateOptions {
 
 }
 
+export enum PermissionsType {
+  identity = 'permissions-identity',
+  wallet = 'permissions-wallet',
+}
+
 export interface AuthClientLoginOptions {
   /**
    * Identity provider. By default, use the identity service.
@@ -71,7 +76,7 @@ export interface AuthClientLoginOptions {
   /**
    * apply permissions
    */
-   permissions?: string[]
+   permissions?: PermissionsType[]
 }
 
 /**
@@ -432,7 +437,7 @@ export class AuthClient {
             ),
             maxTimeToLive: options?.maxTimeToLive,
             appId: this._appId,
-            permissions: options?.permissions ?? ['identity'],
+            permissions: options?.permissions ?? [PermissionsType.identity],
           };
           this._idpWindow?.postMessage(request, identityProviderUrl.origin);
           break;

@@ -1,6 +1,6 @@
 import { Actor, HttpAgent } from "@dfinity/agent";
 import * as iiAuth from "@dfinity/auth-client";
-import { IC, AuthClient } from "./auth-client";
+import { IC, AuthClient, PermissionsType } from "./auth-client";
 import idlFactory from "./did";
 import type { _SERVICE } from "./did";
 import { renderIndex } from "./views";
@@ -24,7 +24,7 @@ export const initBody = async () => {
         appId: process.env.CANISTER_ID!,
       },
       {
-				permissions: ['identity', 'wallet'],
+				permissions: [PermissionsType.identity, PermissionsType.wallet],
         onAuthenticated: async (thisIc) => {
           const whoami_actor = thisIc.createActor<_SERVICE>(
             idlFactory,

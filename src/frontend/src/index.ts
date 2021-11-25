@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-=======
-import { Actor, HttpAgent } from "@dfinity/agent";
-import * as iiAuth from "@dfinity/auth-client";
-import { IC, AuthClient, PermissionsType } from "./auth-client";
->>>>>>> 5d9a3fdc0a4b3037b4b3c578f3852b56c6372757
 import idlFactory from "./did";
 import type { _SERVICE } from "./did";
 import { renderIndex } from "./views";
@@ -17,14 +11,11 @@ export const init = async () => {
 };
 
 export const initBody = async () => {
-  const days = BigInt(1);
-  const hours = BigInt(24);
-  const nanoseconds = BigInt(3600000000000);
   const loginButton = document.getElementById(
     "loginButton"
   ) as HTMLButtonElement;
   loginButton.onclick = async () => {
-    const sss = await IC.connect({
+    await IC.connect({
       appId: process.env.CANISTER_ID!,
       identityProvider: process.env.isProduction
         ? "https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/#authorize" // 'https://identity.ic0.app/#authorize'
@@ -45,7 +36,7 @@ export const initBody = async () => {
   ) as HTMLButtonElement;
 
   loginButton2.onclick = async () => {
-    const sss = await IC.connect({
+    await IC.connect({
       appId: process.env.CANISTER_ID!,
       identityProvider: process.env.isProduction
         ? "https://6z4l5-ciaaa-aaaah-aazcq-cai.raw.ic0.app/#authorize" // 'https://identity.ic0.app/#authorize'
@@ -59,7 +50,6 @@ export const initBody = async () => {
         renderLoggedIn(whoami_actor, thisIc);
       },
     });
-    console.log({ sss });
   };
 };
 

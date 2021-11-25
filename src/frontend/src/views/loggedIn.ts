@@ -1,10 +1,8 @@
 import { ActorSubclass } from "@dfinity/agent";
-import { AuthClient, IC } from "../auth-client";
-import * as iiAuth from "@dfinity/auth-client";
 import { html, render } from "lit-html";
-import { renderIndex } from ".";
 import { init } from "../index";
 import { _SERVICE } from "../did";
+import { IC } from "../auth-client";
 
 const content = () => html`<div class="container">
   <style>
@@ -23,7 +21,7 @@ const content = () => html`<div class="container">
 
 export const renderLoggedIn = (
   actor: ActorSubclass<_SERVICE>,
-  authClient: IC | iiAuth.AuthClient
+  authClient: IC
 ) => {
   render(content(), document.getElementById("pageContent") as HTMLElement);
 
@@ -41,13 +39,7 @@ export const renderLoggedIn = (
 
   (document.getElementById("logout") as HTMLButtonElement).onclick =
     async () => {
-      console.log(authClient instanceof iiAuth.AuthClient);
-      if (authClient instanceof iiAuth.AuthClient === true) {
-        await (authClient as unknown as iiAuth.AuthClient).logout();
-      } else {
-        await (authClient as IC).disconnect();
-      }
-
+      await (authClient as IC).disconnect();
       await init();
     };
 };

@@ -17,6 +17,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "outDir": "/",
     "paths": {
       "dfx-generated/whoami": ["./.dfx/local/canisters/whoami"]
     }

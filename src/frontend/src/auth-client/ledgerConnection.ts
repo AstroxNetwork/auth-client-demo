@@ -22,7 +22,7 @@ import { fromSubAccountId } from "../utils/converter";
 const canisterId: string = process.env.LEDGER_CANISTER_ID!;
 export const canisterIdPrincipal: Principal = Principal.fromText(canisterId);
 
-interface SendOpts {
+export interface SendOpts {
   fee?: bigint;
   memo?: Memo;
   from_subaccount?: number;

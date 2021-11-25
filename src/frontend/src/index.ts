@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+import { Actor, HttpAgent } from "@dfinity/agent";
+import * as iiAuth from "@dfinity/auth-client";
+import { IC, AuthClient, PermissionsType } from "./auth-client";
+>>>>>>> 5d9a3fdc0a4b3037b4b3c578f3852b56c6372757
 import idlFactory from "./did";
 import type { _SERVICE } from "./did";
 import { renderIndex } from "./views";
@@ -32,7 +38,6 @@ export const initBody = async () => {
         renderLoggedIn(whoami_actor, thisIc);
       },
     });
-    console.log({ sss });
   };
 
   const loginButton2 = document.getElementById(

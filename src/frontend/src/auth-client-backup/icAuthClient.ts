@@ -269,6 +269,7 @@ export class AuthClient {
             maxTimeToLive: options?.maxTimeToLive,
             permissions: options?.permissions ?? [PermissionsType.identity],
             appId: this._appId,
+            permissions: options?.permissions ?? [PermissionsType.identity],
           };
           this._idpWindow?.postMessage(request, identityProviderUrl.origin);
           break;

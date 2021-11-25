@@ -1,7 +1,7 @@
 import { SignIdentity } from "@dfinity/agent";
 import { Principal } from "@dfinity/principal";
 import { IC } from "./icConnect";
-import { AccountIdentifier } from "../utils/common/types";
+import { AccountIdentifier } from "../utils-backup/common/types";
 
 import { SendOpts } from "./ledgerConnection";
 

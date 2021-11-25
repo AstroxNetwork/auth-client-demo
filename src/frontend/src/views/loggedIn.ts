@@ -2,7 +2,7 @@ import { ActorSubclass } from "@dfinity/agent";
 import { html, render } from "lit-html";
 import { init } from "../index";
 import { _SERVICE } from "../did";
-import { IC } from "../auth-client";
+import { IC } from "@astrox/connection";
 
 const content = () => html`<div class="container">
   <style>

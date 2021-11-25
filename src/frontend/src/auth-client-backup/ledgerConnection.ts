@@ -17,7 +17,7 @@ import LEDGER_SERVICE, {
 } from "./ledger";
 import { ActorSubclass, HttpAgent, SignIdentity } from "@dfinity/agent";
 import { DelegationIdentity } from "@dfinity/identity";
-import { fromSubAccountId } from "../utils/converter";
+import { fromSubAccountId } from "../utils-backup/converter";
 
 const canisterId: string = process.env.LEDGER_CANISTER_ID!;
 export const canisterIdPrincipal: Principal = Principal.fromText(canisterId);

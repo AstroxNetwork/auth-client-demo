@@ -29,6 +29,7 @@
 		"webpack-dev-server": "^3.11.2"
 	},
 	"dependencies": {
+		"@astrox/connection": "0.0.17",
 		"@dfinity/auth-client": "^0.10.1",
 		"@dfinity/authentication": "^0.10.1",
 		"@dfinity/candid": "^0.10.1",

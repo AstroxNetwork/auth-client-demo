@@ -2,9 +2,8 @@ import idlFactory from "./did";
 import type { _SERVICE } from "./did";
 import { renderIndex } from "./views";
 import { renderLoggedIn } from "./views/loggedIn";
-
-import { PermissionsType } from "./auth-client/types";
-import { IC } from "./auth-client";
+import { IC } from "@astrox/connection";
+import { PermissionsType } from "@astrox/connection/lib/cjs/types";
 
 export const init = async () => {
   await renderIndex();

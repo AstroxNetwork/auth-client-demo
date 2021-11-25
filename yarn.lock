@@ -2,7 +2,20 @@
 # yarn lockfile v1
 
 
-"@dfinity/agent@0.10.1":
+"@astrox/connection@0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@astrox/connection/-/connection-0.0.17.tgz#0c1a10f1057b5559362455dd5ca349035dd31274"
+  integrity sha512-yvosXAkGGhNOuDw4ceY6OVPSZzkWIO668fmQyrzANN2rPw9HA3JUyPLVl3p5dL7G3xE2xB/dnpcL7K1wmbBj2g==
+  dependencies:
+    "@dfinity/agent" "^0.10.1"
+    "@dfinity/authentication" "0.10.1"
+    "@dfinity/candid" "^0.10.1"
+    "@dfinity/identity" "^0.10.1"
+    "@dfinity/principal" "^0.10.1"
+    "@types/crc" "^3.4.0"
+    crc "^3.8.0"
+
+"@dfinity/agent@0.10.1", "@dfinity/agent@^0.10.1":
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/@dfinity/agent/-/agent-0.10.1.tgz#6379b42977ca30a3718ee5b6f67f0d69c995aa21"
   integrity sha512-VUHO5mveK0XX8b9xbfg5SThEGLhMAwkfejuwS5fzF9gqQVWqnIx5ISrbre8UvNNyuzM5v4/vZI+kpE2zL54rwg==
@@ -18,7 +31,7 @@
   resolved "https://registry.yarnpkg.com/@dfinity/auth-client/-/auth-client-0.10.1.tgz#11b4cf48ee0450ab586ff8ac88663b61164a0768"
   integrity sha512-nKEUOyislqX4IklLh1kPGZyh5NHKusJCA6W+ySgh5VmGvE1qXHajRof0SY6z/i/lncjg7vi4fxtod/4knWtp/A==
 
-"@dfinity/authentication@^0.10.1":
+"@dfinity/authentication@0.10.1", "@dfinity/authentication@^0.10.1":
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/@dfinity/authentication/-/authentication-0.10.1.tgz#64690d06323fb2857acba0742488dceadf84f940"
   integrity sha512-k8D80Ba27Kw3sgVtnz9j3jZ/7rpg5r8n1/NWdmy8aHMJnVhTXghIskptM0YRpA7bS9cJW5tSFLnvalKNGWcnuA==
@@ -68,6 +81,13 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
+
+"@types/crc@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@types/crc/-/crc-3.4.0.tgz#2366beb4399cd734b33e42c7ac809576e617d48a"
+  integrity sha1-I2a+tDmc1zSzPkLHrICVduYX1Io=
+  dependencies:
+    "@types/node" "*"
 
 "@types/eslint-scope@^3.7.0":
   version "3.7.1"

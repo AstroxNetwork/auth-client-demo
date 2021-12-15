@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@astrox/connection@0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@astrox/connection/-/connection-0.0.17.tgz#0c1a10f1057b5559362455dd5ca349035dd31274"
-  integrity sha512-yvosXAkGGhNOuDw4ceY6OVPSZzkWIO668fmQyrzANN2rPw9HA3JUyPLVl3p5dL7G3xE2xB/dnpcL7K1wmbBj2g==
+"@astrox/connection@0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@astrox/connection/-/connection-0.0.20.tgz#c25443fb52114a79d3c206ae2067e2d5687ebc07"
+  integrity sha512-uVIib2tuAHEF/f3NFB3nLJoQkuew3o7AUGKZV64p0wfwItTcR0S9d8TOQpjN2acqW287A8htC4Ki8jn0tuuUjQ==
   dependencies:
     "@dfinity/agent" "^0.10.1"
     "@dfinity/authentication" "0.10.1"

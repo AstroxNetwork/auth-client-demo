@@ -16,9 +16,10 @@ export const initBody = async () => {
   ) as HTMLButtonElement;
   loginButton.onclick = async () => {
     await IC.connect({
-      appId: process.env.CANISTER_ID!,
+      // appId: process.env.CANISTER_ID!,
+      walletProviderUrl: "http://localhost:8080/transaction",
       identityProvider: process.env.isProduction
-        ? "https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/#authorize" // 'https://identity.ic0.app/#authorize'
+        ? "https://i3z5x-xaaaa-aaaah-aa2za-cai.raw.ic0.app/anthen/login#authorize" // 'https://identity.ic0.app/#authorize'
         : process.env.LOCAL_ME_CANISTER,
       permissions: [PermissionsType.identity, PermissionsType.wallet],
       onAuthenticated: async (thisIc) => {
@@ -37,9 +38,9 @@ export const initBody = async () => {
 
   loginButton2.onclick = async () => {
     await IC.connect({
-      appId: process.env.CANISTER_ID!,
+      // appId: process.env.CANISTER_ID!,
       identityProvider: process.env.isProduction
-        ? "https://6z4l5-ciaaa-aaaah-aazcq-cai.raw.ic0.app/#authorize" // 'https://identity.ic0.app/#authorize'
+        ? "https://identity.ic0.app/#authorize" // 'https://identity.ic0.app/#authorize'
         : process.env.LOCAL_II_CANISTER,
       permissions: [PermissionsType.identity, PermissionsType.wallet],
       onAuthenticated: async (thisIc) => {

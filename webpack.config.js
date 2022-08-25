@@ -7,7 +7,7 @@ const dfxJson = require('./dfx.json');
 require('dotenv').config();
 let localCanister;
 const LOCAL_II_CANISTER = 'http://rwlgt-iiaaa-aaaaa-aaaaa-cai.localhost:8000/#authorize';
-const LOCAL_ME_CANISTER = 'http://localhost:8080/anthen/login#authorize'; //'http://localhost:8000/?canisterId=7bb7f-zaaaa-aaaaa-aabdq-cai#authorize';
+const LOCAL_ME_CANISTER = 'http://localhost:8080/login#authorize'; //'http://localhost:8000/?canisterId=7bb7f-zaaaa-aaaaa-aabdq-cai#authorize';
 
 try {
 	localCanister = require('./.dfx/local/canister_ids.json').whoami.local;

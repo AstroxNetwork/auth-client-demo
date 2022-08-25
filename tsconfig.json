@@ -8,7 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
     "lib": ["ES2019", "DOM", "esnext"],
-    "module": "commonjs",
+    "module": "esnext",
     "strict": true,
     "target": "es2018",
     "skipLibCheck": true,

@@ -93,7 +93,7 @@ export class AuthClient {
       options.appId,
       wallet !== null ? wallet : undefined,
       options.idpWindowOption ??
-        "height=600, width=800, top=0, right=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no"
+        "height=600, width=800, top=0, right=0, toolbar=no, menubar=no, scrollbars=no, location=no, resizable=no, location=no, status=no"
     );
   }
 

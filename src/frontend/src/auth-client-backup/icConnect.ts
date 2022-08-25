@@ -18,7 +18,7 @@ import {
 const days = BigInt(1);
 const hours = BigInt(24);
 const nanoseconds = BigInt(3600000000000);
-const WALLET_PROVIDER_DEFAULT = "http://localhost:8080/authen/tranction";
+const WALLET_PROVIDER_DEFAULT = "http://localhost:8080/tranction";
 const WALLET_PROVIDER_ENDPOINT = "#transaction";
 
 declare global {

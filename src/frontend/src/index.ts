@@ -34,7 +34,7 @@ export const initBody = async () => {
       useFrame: !(window.innerWidth < 768),
       appId: process.env.CANISTER_ID!,
       identityProvider: process.env.isProduction
-        ? "https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/#authorize" // 'https://identity.ic0.app/#authorize'
+        ? "https://i3z5x-xaaaa-aaaah-aa2za-cai.raw.ic0.app/anthen/login#authorize" // 'https://identity.ic0.app/#authorize'
         : process.env.LOCAL_ME_CANISTER,
       permissions: [PermissionsType.identity, PermissionsType.wallet],
       delegationTargets: ['qsgjb-riaaa-aaaaa-aaaga-cai'],
